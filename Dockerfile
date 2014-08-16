@@ -20,6 +20,15 @@ RUN git clone git://github.com/rcrowley/freight.git /root/freight && \
   make install && \
   rm -rf /root/freight
 
+# Setup freight
+RUN mkdir -p /get.nitrous.io/{cache,lib,.gpg}
+RUN echo "\
+VARLIB=/get.nitrous.io/lib\n\
+VARCACHE=/get.nitrous.io/cache\n\
+GPG=eng@nitrous.io\n\
+GPG_PASSPHRASE_FILE=/get.nitrous.io/.gpg/nitrous.passphrase.gpg\n" \
+> /get.nitrous.io/.freight.conf
+
 # Install xar
 RUN curl -s https://xar.googlecode.com/files/xar-1.5.2.tar.gz \
   | tar -v -C /root -xz && \
