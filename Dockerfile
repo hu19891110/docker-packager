@@ -8,7 +8,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   git-core \
   ruby1.9.3 \
   ruby1.9.1-dev \
-  libssl-dev
+  libssl-dev \
+  python-dateutil
 
 # Install fpm
 RUN gem install fpm --no-ri --no-rdoc
@@ -22,12 +23,12 @@ RUN git clone git://github.com/rcrowley/freight.git /root/freight && \
 
 # Setup freight
 RUN mkdir -p /get.nitrous.io/{cache,lib,.gpg}
-RUN echo "\
-VARLIB=/get.nitrous.io/lib\n\
-VARCACHE=/get.nitrous.io/cache\n\
-GPG=eng@nitrous.io\n\
-GPG_PASSPHRASE_FILE=/get.nitrous.io/.gpg/nitrous.passphrase.gpg\n" \
-> /get.nitrous.io/.freight.conf
+ADD files/freight.conf /get.nitrous.io/.freight.conf
+ADD files/freightadder /usr/bin/freightadder
+ADD files/freightcacher /usr/bin/freightcacher
+
+RUN chmod +x /usr/bin/freightadder
+RUN chmod +x /usr/bin/freightcacher
 
 # Install xar
 RUN curl -s https://xar.googlecode.com/files/xar-1.5.2.tar.gz \
@@ -45,3 +46,10 @@ RUN curl -L -s https://github.com/hogliux/bomutils/archive/0.2.tar.gz \
   make && \
   make install && \
   rm -rf /root/bomutils-0.2
+
+# Install s3cmd
+RUN curl -L -s https://github.com/s3tools/s3cmd/archive/v1.5.0-rc1.tar.gz \
+  | tar -v -C /root -xz && \
+  cd /root/s3cmd-1.5.0-rc1 && \
+  python setup.py install && \
+  rm -rf /root/s3cmd-1.5.0-rc1

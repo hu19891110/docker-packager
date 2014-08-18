@@ -1,0 +1,23 @@
+#!/bin/bash
+
+DIST="nitrous"
+CONFIG=/get.nitrous.io/.freight.conf
+
+if [[ -f $CONFIG ]]; then
+        source $CONFIG
+else
+        echo "freightcacher: Config not found... "
+        exit 1
+fi
+
+rm -rf $VARCACHE
+mkdir -p $VARCACHE
+
+freight cache -c $CONFIG
+
+echo "Removing hardlinks created by freight... "
+rm -rf $VARCACHE/dists/$DIST
+echo "Move $DIST files for s3 sync"
+mv $VARCACHE/dists/${DIST}-* $VARCACHE/dists/$DIST
+
+s3cmd --access_key $ACCESS_KEY --secret_key $SECRET_KEY --verbose --delete-removed --acl-public sync $VARCACHE/ s3://get.nitrous.io/
