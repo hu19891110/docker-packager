@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN gem install fpm --version 1.2.0 --no-ri --no-rdoc
 
 # Install deb-s3
-RUN get install deb-s3 --version 1.6.2 --no-ri --no-rdoc
+RUN gem install deb-s3 --version 0.6.2 --no-ri --no-rdoc
 
 # Install freight
 RUN git clone git://github.com/rcrowley/freight.git /root/freight && \
