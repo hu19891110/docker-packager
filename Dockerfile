@@ -17,21 +17,17 @@ RUN gem install fpm --version 1.2.0 --no-ri --no-rdoc
 # Install deb-s3
 RUN gem install deb-s3 --version 0.6.2 --no-ri --no-rdoc
 
-# Install freight
-RUN git clone git://github.com/rcrowley/freight.git /root/freight && \
-  cd /root/freight && \
-  make && \
-  make install && \
-  rm -rf /root/freight
-
-# Setup freight
+# Setup repos
 RUN mkdir -p /get.nitrous.io/{cache,lib,.gpg}
-ADD files/freight.conf /get.nitrous.io/.freight.conf
-ADD files/freightadder /usr/bin/freightadder
-ADD files/freightcacher /usr/bin/freightcacher
+RUN mkdir -p /apt.nitrous.io/{cache,lib,.gpg}
 
-RUN chmod +x /usr/bin/freightadder
-RUN chmod +x /usr/bin/freightcacher
+# Required for: https://github.com/krobertson/deb-s3/issues/39#issuecomment-48723706
+ADD files/10-tcp.conf /etc/sysctl.d/10-tcp.conf
+
+# Utility binary which is a wrapper around deb-s3
+ADD files/deb-upload /usr/bin/deb-upload
+
+RUN chmod +x /usr/bin/deb-upload
 
 # Install xar
 RUN curl -s https://xar.googlecode.com/files/xar-1.5.2.tar.gz \

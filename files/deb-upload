@@ -1,0 +1,17 @@
+#!/bin/bash
+set -o xtrace
+
+REPO=${1?:"repo is required"}
+DEB=${2?:"deb is required"}
+VISIBILITY=${3?:"visibility is required"}
+GPG_KEY=${4?:"gpg key is required"}
+
+gpg --import $APT_GPG_PUBLIC
+gpg --allow-secret-key-import --import $APT_GPG_SECRET
+
+deb-s3 upload --gpg-options="\-\-passphrase\-fd 1 \-\-no\-tty \-\-passphrase\-file=$APT_GPG_PASSPHRASE" \
+  --sign $GPG_KEY -c nitrous -m main \
+  --access-key-id $ACCESS_KEY --secret-access-key $SECRET_KEY \
+  -b $REPO \
+  -v $VISIBILITY \
+  $DEB
