@@ -14,5 +14,4 @@ deb-s3 upload --gpg-options="\-\-passphrase\-fd 1 \-\-no\-tty \-\-passphrase\-fi
   --access-key-id $ACCESS_KEY --secret-access-key $SECRET_KEY \
   -b $REPO \
   -v $VISIBILITY \
-  --preserve-versions \
   $DEB
