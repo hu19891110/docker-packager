@@ -18,8 +18,9 @@ RUN gem install fpm --version 1.2.0 --no-ri --no-rdoc
 RUN gem install deb-s3 --version 0.6.2 --no-ri --no-rdoc
 
 # Setup repos
-RUN mkdir -p /get.nitrous.io/{cache,lib,.gpg}
-RUN mkdir -p /apt.nitrous.io/{cache,lib,.gpg}
+RUN mkdir -p /apt.nitrous.io/cache
+RUN mkdir -p /apt.nitrous.io/lib
+RUN mkdir -p /apt.nitrous.io/.gpg
 
 # Required for: https://github.com/krobertson/deb-s3/issues/39#issuecomment-48723706
 ADD files/10-tcp.conf /etc/sysctl.d/10-tcp.conf
