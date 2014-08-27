@@ -9,7 +9,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   ruby1.9.3 \
   ruby1.9.1-dev \
   libssl-dev \
-  python-dateutil
+  python-dateutil \
+  wget \
+  unzip
 
 # Install fpm
 RUN gem install fpm --version 1.2.0 --no-ri --no-rdoc
@@ -53,3 +55,8 @@ RUN curl -L -s https://github.com/s3tools/s3cmd/archive/v1.5.0-rc1.tar.gz \
   cd /root/s3cmd-1.5.0-rc1 && \
   python setup.py install && \
   rm -rf /root/s3cmd-1.5.0-rc1
+
+# Install packer
+RUN wget https://dl.bintray.com/mitchellh/packer/0.6.1_linux_amd64.zip -O /tmp/packer.zip; \
+    unzip -d /usr/local/bin /tmp/packer.zip; \
+    rm /tmp/packer.zip
